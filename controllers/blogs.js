@@ -1,16 +1,30 @@
 const blogsRouter = require("express").Router();
-let fakeData = require("../MOCK_DATA");
+const Blog = require("../models/blog");
 
-blogsRouter.get("/", (req, res) => {
-  res.json(fakeData);
+blogsRouter.get("/", (req, res, next) => {
+  Blog.find({})
+    .then((blogs) => {
+      res.json(blogs);
+    })
+    .catch((err) => next(err));
 });
 
-blogsRouter.post("/", (req, res) => {
-  const blog = req.body;
+blogsRouter.post("/", (req, res, next) => {
+  const body = req.body;
 
-  fakeData = fakeData.concat(blog);
+  const blog = new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
+  });
 
-  res.json(fakeData);
+  blog
+    .save()
+    .then((savedBlog) => {
+      res.json(savedBlog);
+    })
+    .catch((err) => next(err));
 });
 
 module.exports = blogsRouter;
