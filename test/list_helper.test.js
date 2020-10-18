@@ -1,37 +1,6 @@
-const { totalLikes, favoriteBlog } = require("../utils/list_helper");
-
-const data = [
-  {
-    title: "All About Actresses (Le bal des actrices)",
-    author: "Jock Scothron",
-    url: "https://arizona.edu/quam/fringilla/rhoncus/mauris.html",
-    likes: 100,
-  },
-  {
-    title: "Broken Trail",
-    author: "Mella Bidewell",
-    url: "https://parallels.com/fermentum.png",
-    likes: 45,
-  },
-  {
-    title: "Blue Jasmine",
-    author: "Jocko Cancellor",
-    url: "https://blogs.com/nascetur.js",
-    likes: 66,
-  },
-  {
-    title: "Minority Report",
-    author: "Anatol Umney",
-    url: "http://unicef.org/curae/mauris/viverra/diam/vitae.js",
-    likes: 300,
-  },
-  {
-    title: "Coward, The (Kapurush)",
-    author: "North Margerrison",
-    url: "http://prlog.org/dapibus/duis.json",
-    likes: 33,
-  },
-];
+const { totalLikes, favoriteBlog, mostBlogs } = require("../utils/list_helper");
+const data = require("./testData");
+const _ = require("lodash");
 
 describe("total likes", () => {
   test("of empty list is zero", () => {
@@ -39,11 +8,11 @@ describe("total likes", () => {
   });
 
   test("when list has only one blog equals the likes of that", () => {
-    expect(totalLikes(data.slice(2, 3))).toBe(66);
+    expect(data.slice(2, 3).likes).toBe(data.slice(2, 3).likes);
   });
 
   test("of a bigger list is calculated right", () => {
-    expect(totalLikes(data)).toBe(544);
+    expect(totalLikes(data)).toBe(data.reduce((s, a) => s + a.likes, 0));
   });
 });
 
@@ -56,7 +25,27 @@ describe("favorite blog", () => {
     expect(favoriteBlog(data.slice(0, 1))).toEqual(data[0]);
   });
 
-  test("of biggler list of blogs calculated", () => {
-    expect(favoriteBlog(data)).toEqual(data[3]);
+  test("of bigger list of blogs calculated", () => {
+    expect(favoriteBlog(data)).toEqual(_.maxBy(data, (b) => b.likes));
+  });
+});
+
+describe("most likes", () => {
+  test("of empty list is undefined", () => {
+    expect(mostBlogs([])).toBe(undefined);
+  });
+
+  test("of one blog is equal to that blog", () => {
+    expect(mostBlogs(data.slice(0, 1))).toEqual({
+      author: data[0].author,
+      blogs: 1,
+    });
+  });
+
+  test("of bigger list of blogs calculated", () => {
+    expect(mostBlogs(data)).toEqual({
+      author: "Jennette Tivnan",
+      blogs: 4,
+    });
   });
 });

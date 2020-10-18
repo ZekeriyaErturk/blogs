@@ -1,3 +1,5 @@
 .env
 node_modules/
 MOCK_DATA.json
+testData.js
+.gitignore
