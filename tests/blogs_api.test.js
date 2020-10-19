@@ -3,8 +3,6 @@ const moongose = require("mongoose");
 const app = require("../app");
 const api = supertest(app);
 
-const Blog = require("../models/blog");
-
 test("blogs are returned as json", async () => {
   await api
     .get("/api/blogs")
@@ -66,6 +64,22 @@ test("check for title and url are missing from post", async () => {
   };
 
   await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
+test("testing for blog deletion", async () => {
+  const blogsBefore = await api.get("/api/blogs");
+
+  const blogToDelete = blogsBefore.body[0];
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+  const blogsAfter = await api.get("/api/blogs");
+
+  expect(blogsAfter.body).toHaveLength(blogsBefore.body.length - 1);
+
+  const titles = blogsAfter.body.map((b) => b.title);
+
+  expect(titles).not.toContain(blogToDelete.title);
 });
 
 afterAll(() => {
