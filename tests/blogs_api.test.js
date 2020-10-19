@@ -12,6 +12,14 @@ test("blogs are returned as json", async () => {
     .expect("Content-Type", /application\/json/);
 });
 
+test("check blogs id's are not named _id", async () => {
+  const blogs = await api.get("/api/blogs");
+
+  blogs.body.forEach((blog) => {
+    expect(blog.id).toBeDefined();
+  });
+});
+
 afterAll(() => {
   moongose.connection.close();
 });
