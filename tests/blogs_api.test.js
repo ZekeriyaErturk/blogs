@@ -44,6 +44,30 @@ test("check adding blog is working", async () => {
   expect(titles).toContain("A blog about JS");
 });
 
+test("check for likes property default to 0", async () => {
+  const newBlog = {
+    title: "A blog",
+    author: "John Doe",
+    url: "www.somesite.com",
+  };
+
+  const res = await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  expect(res.body.likes).toBe(0);
+});
+
+test("check for title and url are missing from post", async () => {
+  const newBlog = {
+    author: "John Doe",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
 afterAll(() => {
   moongose.connection.close();
 });
