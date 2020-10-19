@@ -5,7 +5,7 @@ const requestLogger = (req, res, next) => {
   logger.info(
     `Method: ${chalk.blue(req.method)} | Path: ${chalk.yellow(req.path)}`
   );
-  logger.info("Body: ", chalk.green(JSON.stringify(req.body)));
+  logger.info("Body: ", req.body);
   logger.info("------------");
   next();
 };
