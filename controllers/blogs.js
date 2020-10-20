@@ -61,8 +61,15 @@ blogsRouter.put("/:id", async (req, res) => {
 
 blogsRouter.delete("/:id", async (req, res) => {
   const id = req.params.id;
-  await Blog.findByIdAndRemove(id);
-  res.status(204).end();
+  const blog = await Blog.findById(id);
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+
+  if (blog.user.toString() === decodedToken.id.toString()) {
+    await Blog.findByIdAndRemove(id);
+    res.status(204).end();
+  } else {
+    res.status(401).send({ error: "user unauthorized" });
+  }
 });
 
 module.exports = blogsRouter;
