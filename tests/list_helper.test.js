@@ -30,7 +30,7 @@ describe("favorite blog", () => {
   });
 });
 
-describe("most likes", () => {
+describe("most blogs", () => {
   test("of empty list is undefined", () => {
     expect(mostBlogs([])).toBe(undefined);
   });
